@@ -1,0 +1,1 @@
+{"version":3,"file":"Attachments.controller.js","names":["sap","ui","define","MobileLibrary","Controller","Item","JSONModel","Uploader","extend"],"sources":["Attachments-dbg.controller.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CACb,gBACA,6BACA,mBACA,8BACA,yBACE,SAAUC,EAAeC,EAAYC,EAAMC,EAAWC,GACxD,aAEA,OAAOH,EAAWI,OAAO,8BAA+B,CAExD,EACD","ignoreList":[]}

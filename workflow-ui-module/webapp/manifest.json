@@ -1,0 +1,191 @@
+{
+    "_version": "1.26.0",
+    "sap.app": {
+        "id": "CollegeApprovalUI.workflowuimodule",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.8.4",
+            "toolsId": "52b0adcb-df6f-4d48-a909-180d6e66a5bd"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.82.2",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "CollegeApprovalUI.workflowuimodule.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {}
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "CollegeApprovalUI.workflowuimodule.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "RouteMyTaskUI",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetMyTaskUI"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetMyTaskUI": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "MyTaskUI",
+                    "viewName": "MyTaskUI"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "CollegeApprovalUI.workflowuimodule.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "App"
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "task2"
+    },
+    "sap.bpa.task": {
+        "_version": "1.0.0",
+        "outcomes": [
+            {
+                "id": "approve",
+                "label": "Approve"
+            },
+            {
+                "id": "reject",
+                "label": "Reject"
+            }
+        ],
+        "inputs": {
+            "$schema": "http://json-schema.org/draft-07/schema",
+            "title": "input",
+            "type": "object",
+            "required": [
+                "lecturerId",
+                "lecturerName",
+                "department",
+                "dob",
+                "age",
+                "gender",
+                "additionalSkills"
+            ],
+            "properties": {
+                "lecturerId": {
+                    "type": "string",
+                    "title": "Lecturer Id",
+                    "description": "Lecturer Id"
+                },
+                "lecturerName": {
+                    "type": "string",
+                    "title": "Lecturer Name",
+                    "description": "Lecturer Name"
+                },
+                "department": {
+                    "type": "string",
+                    "title": "Department",
+                    "description": "Department"
+                },
+                "dob": {
+                    "type": "string",
+                    "title": "DOB",
+                    "description": "DOB"
+                },
+                "age": {
+                    "type": "number",
+                    "title": "Age",
+                    "description": "Age"
+                },
+                "gender": {
+                    "type": "string",
+                    "title": "Gender",
+                    "description": "Gender"
+                },
+                "additionalSkills": {
+                    "type": "string",
+                    "title": "Additional Skills",
+                    "description": "Additional Skills"
+                }
+            }
+        },
+        "outputs": {},
+        "category": "approval"
+    }
+}

@@ -1,0 +1,2 @@
+sap.ui.define(["sap/m/library","sap/ui/core/mvc/Controller","sap/ui/core/Item","sap/ui/model/json/JSONModel","sap/m/upload/Uploader"],function(e,a,o,p,s){"use strict";return a.extend("sap.m.sample.UploadSet.Page",{})});
+//# sourceMappingURL=Attachments.controller.js.map

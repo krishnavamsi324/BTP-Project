@@ -1,0 +1,1 @@
+{"version":3,"file":"Approval.js","names":["sap","ui","define","MessageToast","SendApproval","oEvent","show"],"sources":["Approval-dbg.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CACV,sBACD,SAASC,GACR,aAEA,MAAO,CACHC,aAAc,SAASC,GACnBF,EAAaG,KAAK,0BACtB,EAER","ignoreList":[]}

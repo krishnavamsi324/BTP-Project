@@ -1,0 +1,171 @@
+_schema-version: "3.1"
+ID: Task2
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: Task2-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: Task2-db
+  - name: Destination_Connectivity
+  - name: uaa_Task2
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+- name: Task2-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: Task2-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: Task2-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: Task2-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - task2collegedept.zip
+      name: task2collegedept
+      target-path: resources/
+    - artifacts:
+      - task2collegelect.zip
+      name: task2collegelect
+      target-path: resources/
+    - artifacts:
+      - CollegeApprovalUIworkflowuimodule.zip
+      name: CollegeApprovalUIworkflowuimodule
+      target-path: resources/
+- name: task2collegedept
+  type: html5
+  path: app/task2collegedept
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: task2collegelect
+  type: html5
+  path: app/task2collegelect
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: Task2-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: Task2-destination-service
+    parameters:
+      content-target: true
+  - name: Task2-repo-host
+    parameters:
+      service-key:
+        name: Task2-repo-host-key
+  - name: uaa_Task2
+    parameters:
+      service-key:
+        name: uaa_Task2-key
+  parameters:
+    content:
+      subaccount:
+        destinations:
+        - Name: task2_Task2_repo_host
+          ServiceInstanceName: Task2-html5-srv
+          ServiceKeyName: Task2-repo-host-key
+          sap.cloud.service: task2
+        - Authentication: OAuth2UserTokenExchange
+          Name: task2_uaa_Task2
+          ServiceInstanceName: Task2-xsuaa-service
+          ServiceKeyName: uaa_Task2-key
+          sap.cloud.service: task2
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: CollegeApprovalUIworkflowuimodule
+  type: html5
+  path: workflow-ui-module
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: Task2-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: Destination_Connectivity
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
+- name: Task2-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: Task2-html5-srv
+    service-plan: app-host
+- name: Task2-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        subaccount:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: Task2-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: Task2-destination-service
+    service-plan: lite
+  requires:
+  - name: srv-api
+- name: uaa_Task2
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: Task2-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production
